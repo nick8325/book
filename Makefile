@@ -48,6 +48,11 @@ TOPPDFFILES:=$(TOPTEXFILES:.tex=.pdf)
 # Default PDF file to make
 DEFAULTPDF:=$(DEFAULTTOPTEX:.tex=.pdf)
 
+# Options for ebook conversion
+EBOOKOPTS := --remove-paragraph-spacing \
+	--title="Homotopy Type Theory: Univalent Foundations of Mathematics" \
+	--authors="Univalent Foundations Program"
+
 default: $(DEFAULTPDF)
 
 all: $(TOPPDFFILES) exercise_solutions.pdf cover-lulu-hardcover.pdf cover-lulu-paperback.pdf cover-letter.pdf cover-a4.pdf
@@ -63,6 +68,15 @@ $(TOPPDFFILES) : %.pdf : %.tex $(TEXFILES) references.bib cover-lores-front.png 
 	     pdflatex $< ;\
 	     echo "HINT: If you think this took a long time you should install latexmk." ;\
 	fi
+
+html/hott.html: hott-html.tex $(TEXFILES) references.bib cover-lores-front.png cover-lores-back.png
+	./make-html
+
+hott.epub: html/hott.html
+	ebook-convert $< $@ $(EBOOKOPTS) --no-default-epub-cover
+
+hott.mobi: html/hott.html
+	ebook-convert $< $@ $(EBOOKOPTS) --mobi-keep-original-images
 
 all default: log-check
 log-check:

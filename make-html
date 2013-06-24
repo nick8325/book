@@ -1,0 +1,40 @@
+#!/bin/sh
+set -e
+
+# Make a copy of the TeX files, since we will alter them
+rm -rf html
+mkdir html
+cp *.{tex,bib,bst,sty,cfg} torus-lores-bw.png html
+cd html
+mv hott-html.tex hott.tex
+
+# Use poor man's cleveref (see cleveref manual),
+# since TeX4ht is incompatible with cleveref
+sed -i 's/autoref/cref/g' *.tex
+sed -i 's/^\(\\usepackage\[capitalize\)\(]{cleveref}\)$/\1,poorman\2/' main.tex
+pdflatex hott
+pdflatex hott
+for i in *.tex; do
+    echo "Poor man's cleveref on $i..."
+    sed -f hott.sed -i $i
+done
+
+# Finally, run TeX4ht.
+latex -output-format=dvi '\def\tohtml{}\input hott'
+bibtex hott
+tex '\def\filename{{hott}{idx}{4dx}{ind}} \input idxmake.4ht'
+makeindex -o hott.ind hott.4dx
+latex -output-format=dvi '\def\tohtml{}\input hott'
+latex -output-format=dvi '\def\tohtml{}\input hott'
+
+tex4ht -f/hott
+t4ht -f/hott
+
+# Work around a bug in TeX4ht's Tikz SVG generation :(
+sed -i 's/\(src="[^"]*"[^>]*\)>/\1\/\>/g' *.svg
+
+# Clean up all the TeX rubbish that gets left around.
+rm *.{aux,tex,sty,bib,bst,4*,bbl,blg,brf,dvi,idv,idx,ilg,ind,lg,log,ps,pdf,sed,tmp,toc,xref}
+
+echo
+echo HTML book can now be found in html/hott.html.

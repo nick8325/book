@@ -1,0 +1,53 @@
+% -*- mode: LaTeX -*-
+% This is a main LaTeX file for generating the HoTT book in HTML
+% format, meant for generating ebooks and the like.
+% It comes out in co
+% Use ./make-html to compile it!
+
+% **** OPTIONS ****
+
+% DO NOT INCLUDE A COVER
+\input{opt-no-cover}
+
+% DO NOT INCLUDE A BASTARD TITLE
+\input{opt-no-bastard}
+
+% COLOR
+\input{opt-color}
+
+% FORMATTING DEPENDENT ON PAPER SIZE
+\input{opt-ebook}
+
+% IMAGE FOR HALF-TITLE
+\def\OPThalftorus{torus-lores-bw.png}
+
+% IMAGE FOR FRONT AND BACK
+\let\OPTfrontimage=\OPTlofrontimage
+\let\OPTbackimage=\OPTlobackimage
+
+% Set up TeX4ht, unless we are using "poor man's cleveref".
+\ifx\tohtml\undefined
+    \relax
+\else
+    \documentclass[tex4ht,\OPTfontsize]{book}
+    \renewcommand{\documentclass}[2][]{}
+    \usepackage[hott]{tex4ht}
+    \def\pgfsysdriver{pgfsys-tex4ht.def}
+
+    % Hacks:
+    % 1. dvilatex doesn't have nopagecolor.
+    % 2. TeX4ht conflicts with the wallpaper package.
+    % 3. \titleformat looks silly in HTML.
+    % 4. TeX4ht makes a mess of the Q.E.D. symbol.
+    \makeatletter
+    \@namedef{ver@wallpaper.sty}{}
+    \@namedef{ver@titlesec.sty}{}
+    \@namedef{opt@titlesec.sty}{raggedright}
+    \makeatother
+    \def\nopagecolor{}
+    \def\titleformat#1[#2]#3#4#5#6{}
+    \def\qedsymbol{\ensuremath{\Box}}
+\fi
+
+% INCLUDE THE ACTUAL MAIN FILE
+\input{main}
