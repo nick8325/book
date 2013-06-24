@@ -125,7 +125,7 @@
 \makeatother
 
 % Other notations related to dependent sums
-\let\setof\Set    % from package 'braket', write \setof{ x:A | P(x) }.
+\def\setof#1{\left\{#1\right\}}
 \newcommand{\pair}{\ensuremath{\mathsf{pair}}\xspace}
 \newcommand{\tup}[2]{(#1,#2)}
 \newcommand{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
@@ -294,7 +294,7 @@
 \let\ntypeU\typeleU
 \let\ntypep\typelep
 \let\ntypepU\typelepU
-\renewcommand{\set}{\ensuremath{\mathsf{Set}}\xspace}
+\newcommand{\set}{\ensuremath{\mathsf{Set}}\xspace}
 \newcommand{\setU}{\ensuremath{\mathsf{Set}_\UU}\xspace}
 \newcommand{\prop}{\ensuremath{\mathsf{Prop}}\xspace}
 \newcommand{\propU}{\ensuremath{\mathsf{Prop}_\UU}\xspace}
@@ -652,7 +652,8 @@
   \newtheorem{#1}[#1]{#2}
   \aliascntresetthe{#1}
   %% This command tells cleveref's \cref what to call things
-  \crefname{#1}{#2}{#3}}
+  \crefname{#1}{#2}{#3}
+  }
 
 % Now define a bunch of theorem-type environments.
 \newtheorem{thm}{Theorem}[section]
