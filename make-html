@@ -32,7 +32,7 @@ t4ht -f/hott
 
 # Convert the weird pseudo-HTML that TeX4ht produces to real XHTML
 sed -i 's/<tspan font-family="\([^"]*\)" font-size="\([^"]*\)">/<span style="font-family='\''\1'\''; font-size='\''\2'\''">/g;s/<\/tspan>/<\/span>/g' hott.html
-tidy -clean --output-xml yes -numeric -bare -modify --doctype transitional --drop-proprietary-attributes yes hott.html
+tidy -clean -asxhtml --output-xml yes -numeric -bare -modify --doctype transitional --drop-proprietary-attributes yes hott.html || true
 
 # Work around a bug in TeX4ht's Tikz SVG generation :(
 sed -i 's/\(src="[^"]*"[^>]*\)>/\1\/\>/g' *.svg
