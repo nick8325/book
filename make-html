@@ -38,7 +38,7 @@ tidy -clean --output-xml yes -numeric -bare -modify --doctype transitional --dro
 sed -i 's/\(src="[^"]*"[^>]*\)>/\1\/\>/g' *.svg
 
 # Clean up all the TeX rubbish that gets left around.
-rm *.{aux,tex,sty,bib,bst,4*,bbl,blg,brf,dvi,idv,idx,ilg,ind,lg,log,ps,pdf,sed,tmp,toc,xref}
+rm *.{aux,tex,sty,bib,bst,4*,bbl,blg,brf,dvi,idv,idx,ilg,ind,lg,log,ps,pdf,sed,tmp,toc,xref,cfg}
 
 echo
 echo HTML book can now be found in html/hott.html.
