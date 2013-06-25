@@ -37,6 +37,31 @@ tidy -clean -asxhtml --output-xml yes -numeric -bare -modify --doctype transitio
 # Work around a bug in TeX4ht's Tikz SVG generation :(
 sed -i 's/\(src="[^"]*"[^>]*\)>/\1\/\>/g' *.svg
 
+# Remove duplicate .png files.
+get() {
+    eval "result=\$$1"
+    echo $result
+}
+
+put() {
+    eval "$1='$2'"
+}
+
+for i in *.png; do
+    md5=$(png2pnm < $i | md5sum | awk '{print $1;}')
+    old=$(get file_$md5)
+    if [ z$old != z ]; then
+        echo $i is identical to $old
+        echo "s/$i/$old/g" >> deduplicate.sed
+        rm "$i"
+    else
+        put file_$md5 $i
+    fi
+done
+
+echo Removing duplicate images...
+sed -f deduplicate.sed -i *.html *.svg
+
 # Clean up all the TeX rubbish that gets left around.
 rm *.{aux,tex,sty,bib,bst,4*,bbl,blg,brf,dvi,idv,idx,ilg,ind,lg,log,ps,pdf,sed,tmp,toc,xref,cfg}
 
